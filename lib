@@ -1,0 +1,58 @@
+#!/hint/bash
+
+die() {
+	printf '%s\n' "$*" >&2
+	exit 1
+}
+
+exec_mariadb() {
+	local cmd=(
+		"$1"
+		"-h$REMOTE_HOST"
+		"-P$REMOTE_PORT" 
+		"-u$REMOTE_USER"
+		"-p$REMOTE_PASS"
+		"${@:2}"
+	)
+
+	exec -- "${cmd[@]}"
+}
+
+exec_mariadb_over_dump() {
+	local cmd=(
+		"$1"
+		-hlocalhost \
+		"-P$LOCAL_PORT" \
+		"-u$REMOTE_USER" \
+		"-p$REMOTE_PASS" \
+		"${@:2}"
+	)
+
+	exec -- "${cmd[@]}"
+}
+
+sd_user_ssh_L() {
+	local config="$1"
+
+	# resolve symlinks
+	config="$(realpath -eq -- "$config")"
+
+	local unit
+	unit="ssh-L@$(systemd-escape --path -- "$config").service"
+
+	if systemctl --user status -- "$unit" >&/dev/null; then
+		return
+	fi
+
+	systemd-run \
+		--user \
+		--unit "$unit" \
+		-E SSH_AUTH_SOCK \
+		-p Restart=always \
+		-p RestartSec=5s \
+		-p Type=forking \
+		-- "${SSH[@]}" \
+			-fN \
+			-L "$LOCAL_PORT:$REMOTE_HOST:$REMOTE_PORT" \
+			-- "$SSH_HOST"
+}

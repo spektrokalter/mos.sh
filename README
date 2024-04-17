@@ -1,0 +1,61 @@
+SSH Initialization
+
+	ssh(1):
+
+		"[ssh -f] Requests ssh to go to background just before
+		command execution."
+
+	This implies that `systemd-run -p Type=forking` returns once
+	the connection is established.
+
+Shared connections
+
+	If multiple databases run on the same SQL server, the same
+	connection could be shared, i.e. the same LOCAL_PORT.
+
+	If multiple ssh -L services run with the same LOCAL_PORT, one
+	is broken, and mariadb connects to the other.
+
+	To avoid redundant services, service suffix could be used.
+
+	The same host can be resolved differently on different servers,
+	thus SSH_HOST must be included in the suffix.
+
+	Restarting a shared service is not viable as it can break an
+	already established connection.
+
+	Due to all the quirks and the fact that LOCAL_PORT is not derived
+	automatically anyway, this feature will not be implemented.
+
+Argument passing
+
+	mariadb(1):
+
+		"mysql [options] db_name"
+
+	mos uses REMOTE_DB as db_name.
+
+	mariadb-dump(1) is different. It also takes table names *after*
+	db_name. In this context, what is the best way to integrate
+	mos-dump and mariadb-dump?
+
+	The original purpose of this tool is to automatize *accessing*
+	(in mariadb terminology) a mariadb server or database. Choosing
+	*what* to access is secondary. Nevertheless, this choice,
+	whatever it might be, is still a part of the purpose. Because
+	database accessing is quite handy, I chose to support it.
+
+	Supporting db_name automatization and table names in CLI arguments
+	is possible but messy. One can distinguish table names from
+	options by looking at '-' in the beginning of an argument. (A
+	particularly tricky way is to call mariadb-dump with db_name
+	before all options. It works. But this behavior is unspecified
+	in the manual page.)
+
+	The necessary drawback is mos-dump not being able to work
+	with table names that begin with '-'. In my opinion, db_name
+	automatization outweighs this one specific drawback.
+
+Unimplemented
+
+	Automatic LOCAL_PORT derivation.

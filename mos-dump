@@ -1,0 +1,34 @@
+#!/bin/bash
+
+set -o errexit -o nounset -o pipefail
+
+source -- "$(dirname -- "$(realpath -- "${BASH_SOURCE[0]}")")/lib"
+source -- "$HOME/.mariadb-over-ssh.conf"
+
+if (( $# < 1 )); then
+	die "usage: $0 config [mariadb_options] [table_names]"
+fi
+
+CONFIG="$HOME/.mariadb-over-ssh.d/$1"
+shift
+
+TABLES=()
+
+for arg; do
+	if [[ "$arg" =~ ^- ]]; then
+		MARIADB_DUMP+=("$arg")
+	else
+		TABLES+=("$arg")
+	fi
+done
+
+source -- "$CONFIG"
+
+MARIADB_DUMP+=("${MARIADB_DUMP_OPTS[@]}" -- "$REMOTE_DB" "${TABLES[@]}")
+
+if [[ -v SSH_HOST ]]; then
+	sd_user_ssh_L "$CONFIG"
+	exec_mariadb_over_proxy "${MARIADB_DUMP[@]}"
+else
+	exec_mariadb "${MARIADB_DUMP[@]}"
+fi
