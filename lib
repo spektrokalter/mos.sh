@@ -18,7 +18,7 @@ exec_mariadb() {
 	exec -- "${cmd[@]}"
 }
 
-exec_mariadb_over_dump() {
+exec_mariadb_over_proxy() {
 	local cmd=(
 		"$1"
 		-hlocalhost \
