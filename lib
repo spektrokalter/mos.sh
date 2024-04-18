@@ -51,7 +51,7 @@ sd_user_ssh_L() {
 		-p Restart=always \
 		-p RestartSec=5s \
 		-p Type=forking \
-		-- "${SSH[@]}" \
+		-- "${SSH[@]}" "${SSH_OPTS[@]}" \
 			-fN \
 			-L "$LOCAL_PORT:$REMOTE_HOST:$REMOTE_PORT" \
 			-- "$SSH_HOST"
