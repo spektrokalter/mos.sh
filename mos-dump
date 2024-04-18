@@ -16,11 +16,12 @@ if [[ ! -f "$CONFIG" || ! -r "$CONFIG" ]]; then
 	die "bad config: $CONFIG"
 fi
 
+cmd=("${MARIADB_DUMP[@]}")
 TABLES=()
 
 for arg; do
 	if [[ "$arg" =~ ^- ]]; then
-		MARIADB_DUMP+=("$arg")
+		cmd+=("$arg")
 	else
 		TABLES+=("$arg")
 	fi
@@ -28,11 +29,11 @@ done
 
 source -- "$CONFIG"
 
-MARIADB_DUMP+=("${MARIADB_DUMP_OPTS[@]}" -- "$REMOTE_DB" "${TABLES[@]}")
+cmd+=("${MARIADB_DUMP_OPTS[@]}" -- "$REMOTE_DB" "${TABLES[@]}")
 
 if [[ -v SSH_HOST ]]; then
 	sd_user_ssh_L "$CONFIG"
-	exec_mariadb_over_proxy "${MARIADB_DUMP[@]}"
+	exec_mariadb_over_proxy "${cmd[@]}"
 else
-	exec_mariadb "${MARIADB_DUMP[@]}"
+	exec_mariadb "${cmd[@]}"
 fi
