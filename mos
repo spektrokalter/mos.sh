@@ -12,6 +12,10 @@ fi
 CONFIG="$HOME/.mariadb-over-ssh.d/$1"
 shift
 
+if [[ ! -f "$CONFIG" || ! -r "$CONFIG" ]]; then
+	die "bad config: $CONFIG"
+fi
+
 source -- "$CONFIG"
 
 MARIADB+=("${MARIADB_OPTS[@]}" "$@" -- "$REMOTE_DB")
