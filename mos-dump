@@ -17,19 +17,19 @@ if [[ ! -f "$CONFIG" || ! -r "$CONFIG" ]]; then
 fi
 
 cmd=("${MARIADB_DUMP[@]}")
-TABLES=()
+tables=()
 
 for arg; do
 	if [[ "$arg" =~ ^- ]]; then
 		cmd+=("$arg")
 	else
-		TABLES+=("$arg")
+		tables+=("$arg")
 	fi
 done
 
 source -- "$CONFIG"
 
-cmd+=("${MARIADB_DUMP_OPTS[@]}" -- "$REMOTE_DB" "${TABLES[@]}")
+cmd+=("${MARIADB_DUMP_OPTS[@]}" -- "$REMOTE_DB" "${tables[@]}")
 
 if [[ -v SSH_HOST ]]; then
 	sd_user_ssh_L "$CONFIG"
