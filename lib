@@ -40,7 +40,7 @@ sd_user_ssh_L() {
 	local unit
 	unit="ssh-L@$(systemd-escape --path -- "$config").service"
 
-	if systemctl --user status -- "$unit" >&/dev/null; then
+	if systemctl --user status -- "$unit" >/dev/null 2>&1; then
 		return
 	fi
 
