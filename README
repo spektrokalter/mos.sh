@@ -50,10 +50,6 @@ Argument passing
 	before all options. It works. But this behavior is unspecified
 	in the manual page.)
 
-	The necessary drawback is mos-dump not being able to work
-	with table names that begin with '-'. In my opinion, db_name
-	automatization outweighs this one specific drawback.
-
 Unimplemented
 
 	Automatic LOCAL_PORT derivation.

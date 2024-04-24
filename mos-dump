@@ -24,11 +24,19 @@ fi
 cmd=("${MARIADB_DUMP[@]}")
 tables=()
 
-for arg; do
-	if [[ "$arg" =~ ^- ]]; then
+for arg in "$@"; do
+	if [[ "$arg" == '--' ]]; then
+		shift
+		for arg in "$@"; do
+			tables+=("$arg")
+		done
+		break
+	elif [[ "$arg" =~ ^- ]]; then
 		cmd+=("$arg")
+		shift
 	else
 		tables+=("$arg")
+		shift
 	fi
 done
 
