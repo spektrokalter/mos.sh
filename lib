@@ -36,7 +36,7 @@ sd_user_ssh_L() {
 
 	# resolve symlinks and normalize the path
 	#
-	config="$(realpath -e -- "$config")"
+	config="$(realpath -- "$config")"
 
 	local unit
 	unit="ssh-L@$(systemd-escape --path -- "$config").service"
