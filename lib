@@ -34,7 +34,8 @@ exec_mariadb_over_proxy() {
 sd_user_ssh_L() {
 	local config="$1"
 
-	# resolve symlinks
+	# resolve symlinks and normalize the path
+	#
 	config="$(realpath -e -- "$config")"
 
 	local unit
