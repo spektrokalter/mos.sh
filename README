@@ -50,6 +50,9 @@ Argument passing
 	before all options. It works. But this behavior is unspecified
 	in the manual page.)
 
+	The only limitation is that mos-dump only understands the
+	`--host=val` option format, not `--host val` or `-h val`.
+
 Unimplemented
 
 	Automatic LOCAL_PORT derivation.
