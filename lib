@@ -47,7 +47,7 @@ sd_user_ssh_L() {
 
 	systemd-run \
 		--user \
-		--unit "$unit" \
+		-u "$unit" \
 		-E SSH_AUTH_SOCK \
 		-p Restart=always \
 		-p RestartSec=5s \
