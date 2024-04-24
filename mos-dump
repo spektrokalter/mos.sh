@@ -3,13 +3,13 @@
 set -o errexit -o nounset -o pipefail
 
 source -- "$(dirname -- "$(realpath -- "${BASH_SOURCE[0]}")")/lib"
-source -- "$HOME/.mariadb-over-ssh.conf"
+source -- "$HOME/.mos.sh.conf"
 
 if (( $# < 1 )); then
 	die "usage: $0 config [mariadb_options] [table_names]"
 fi
 
-CONFIG="$HOME/.mariadb-over-ssh.d/$1"
+CONFIG="$HOME/.mos.sh.d/$1"
 shift
 
 if [[ ! -f "$CONFIG" || ! -r "$CONFIG" ]]; then
