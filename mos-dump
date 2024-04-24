@@ -11,7 +11,7 @@ if conf="$HOME/.mos.sh.conf"; [[ -f "$conf" && -r "$conf" ]]; then
 fi
 
 if (( $# < 1 )); then
-	die "usage: $0 config [mariadb_options] [table_names]"
+	die "usage: $0 config [mariadb_options] [--] [table_names]"
 fi
 
 CONFIG="$HOME/.mos.sh.d/$1"
