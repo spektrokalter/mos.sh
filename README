@@ -45,7 +45,7 @@ Argument passing
 
 	Supporting db_name automatization and table names in CLI arguments
 	is possible but messy. One can distinguish table names from
-	options by looking at '-' in the beginning of an argument.
+	options by looking for '-' in the beginning of an argument.
 
 	The only limitation is that mos-dump only understands the
 	`--host=val` option format, not `--host val` or `-h val`.
