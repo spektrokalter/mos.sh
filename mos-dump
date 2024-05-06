@@ -79,7 +79,11 @@ for arg in "$@"; do
 	fi
 done
 
-cmd+=(-- "$REMOTE_DB" "${tables[@]}")
+cmd+=(
+	--
+	"$REMOTE_DB"
+	"${tables[@]}"
+)
 
 #
 # run ssh & mariadb-dump

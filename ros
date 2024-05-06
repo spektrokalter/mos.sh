@@ -53,7 +53,10 @@ else
 	)
 fi
 
-cmd+=("${REDIS_OPTS[@]}" "$@")
+cmd+=(
+	"${REDIS_OPTS[@]}"
+	"$@"
+)
 
 #
 # run ssh & redis-cli
