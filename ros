@@ -23,11 +23,32 @@ fi
 
 source -- "$CONFIG"
 
-cmd=("${REDIS[@]}" "${REDIS_OPTS[@]}" "$@")
+#
+# build redis command
+#
+
+cmd=("${REDIS[@]}")
+
+if [[ -v SSH_HOST ]]; then
+	cmd+=(
+		-h localhost
+		-p "$LOCAL_PORT"
+	)
+else
+	cmd+=(
+		-h "$REMOTE_HOST"
+		-p "$REMOTE_PORT"
+	)
+fi
+
+cmd+=("${REDIS_OPTS[@]}" "$@")
+
+#
+# run ssh & redis-cli
+#
 
 if [[ -v SSH_HOST ]]; then
 	sd_user_ssh_L "$CONFIG"
-	exec_redis_over_proxy "${cmd[@]}"
-else
-	exec_redis "${cmd[@]}"
 fi
+
+exec -- "${cmd[@]}"

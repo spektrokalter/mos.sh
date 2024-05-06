@@ -23,11 +23,36 @@ fi
 
 source -- "$CONFIG"
 
-cmd=("${MARIADB[@]}" "${MARIADB_OPTS[@]}" "$@" -- "$REMOTE_DB")
+#
+# build mariadb command
+#
+
+cmd=("${MARIADB[@]}")
+
+if [[ -v SSH_HOST ]]; then
+	cmd+=(
+		-hlocalhost
+		"-P$LOCAL_PORT"
+		"-u$REMOTE_USER"
+		"-p$REMOTE_PASS"
+	)
+else
+	cmd+=(
+		"-h$REMOTE_HOST"
+		"-P$REMOTE_PORT"
+		"-u$REMOTE_USER"
+		"-p$REMOTE_PASS"
+	)
+fi
+
+cmd+=("${MARIADB_OPTS[@]}" "$@" -- "$REMOTE_DB")
+
+#
+# run ssh & mariadb
+#
 
 if [[ -v SSH_HOST ]]; then
 	sd_user_ssh_L "$CONFIG"
-	exec_mariadb_over_proxy "${cmd[@]}"
-else
-	exec_mariadb "${cmd[@]}"
 fi
+
+exec -- "${cmd[@]}"

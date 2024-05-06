@@ -23,7 +23,30 @@ fi
 
 source -- "$CONFIG"
 
-cmd=("${MARIADB_DUMP[@]}" "${MARIADB_DUMP_OPTS[@]}")
+#
+# build mariadb-dump command
+#
+
+cmd=("${MARIADB_DUMP[@]}")
+
+if [[ -v SSH_HOST ]]; then
+	cmd+=(
+		-hlocalhost
+		"-P$LOCAL_PORT"
+		"-u$REMOTE_USER"
+		"-p$REMOTE_PASS"
+	)
+else
+	cmd+=(
+		"-h$REMOTE_HOST"
+		"-P$REMOTE_PORT"
+		"-u$REMOTE_USER"
+		"-p$REMOTE_PASS"
+	)
+fi
+
+cmd+=("${MARIADB_DUMP_OPTS[@]}")
+
 tables=()
 
 for arg in "$@"; do
@@ -33,7 +56,9 @@ for arg in "$@"; do
 			tables+=("$arg")
 		done
 		break
-	elif [[ "$arg" =~ ^- ]]; then
+	fi
+
+	if [[ "$arg" =~ ^- ]]; then
 		cmd+=("$arg")
 		shift
 	else
@@ -44,9 +69,12 @@ done
 
 cmd+=(-- "$REMOTE_DB" "${tables[@]}")
 
+#
+# run ssh & mariadb-dump
+#
+
 if [[ -v SSH_HOST ]]; then
 	sd_user_ssh_L "$CONFIG"
-	exec_mariadb_over_proxy "${cmd[@]}"
-else
-	exec_mariadb "${cmd[@]}"
 fi
+
+exec -- "${cmd[@]}"
