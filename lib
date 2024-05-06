@@ -22,7 +22,6 @@ sd_user_ssh_L() {
 	systemd-run \
 		--user \
 		-u "$unit" \
-		-E SSH_AUTH_SOCK \
 		-p Restart=always \
 		-p RestartSec=5s \
 		-p Type=forking \
