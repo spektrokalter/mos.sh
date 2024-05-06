@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -o errexit -o nounset -o pipefail
+
+mos_root_dir="$(dirname -- "$(realpath -- "${BASH_SOURCE[0]}")")"
+source -- "$mos_root_dir/lib"
+source -- "$mos_root_dir/default.conf"
+
+if conf="$HOME/.mos.sh.conf"; [[ -f "$conf" && -r "$conf" ]]; then
+	source -- "$conf"
+fi
+
+if (( $# < 1 )); then
+	die "usage: $0 config [redis_options]"
+fi
+
+CONFIG="$HOME/.ros.sh.d/$1"
+shift
+
+if [[ ! -f "$CONFIG" || ! -r "$CONFIG" ]]; then
+	die "bad config: $CONFIG"
+fi
+
+source -- "$CONFIG"
+
+cmd=("${REDIS[@]}" "${REDIS_OPTS[@]}" "$@")
+
+if [[ -v SSH_HOST ]]; then
+	sd_user_ssh_L "$CONFIG"
+	exec_redis_over_proxy "${cmd[@]}"
+else
+	exec_redis "${cmd[@]}"
+fi
