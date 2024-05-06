@@ -6,9 +6,17 @@ mos_root_dir="$(dirname -- "$(realpath -- "${BASH_SOURCE[0]}")")"
 source -- "$mos_root_dir/lib"
 source -- "$mos_root_dir/default.conf"
 
+#
+# read mos.sh configuration
+#
+
 if conf="$HOME/.mos.sh.conf"; [[ -f "$conf" && -r "$conf" ]]; then
 	source -- "$conf"
 fi
+
+#
+# parse command-line arguments
+#
 
 if (( $# < 1 )); then
 	die "usage: $0 config [mariadb_dump_options] [--] [table_names]"
@@ -16,6 +24,10 @@ fi
 
 CONFIG="$HOME/.mos.sh.d/$1"
 shift
+
+#
+# validate & read the connection configuration
+#
 
 if [[ ! -f "$CONFIG" || ! -r "$CONFIG" ]]; then
 	die "bad config: $CONFIG"
