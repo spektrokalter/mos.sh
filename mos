@@ -45,19 +45,22 @@ if [[ -v SSH_HOST ]]; then
 	cmd+=(
 		-hlocalhost
 		"-P$LOCAL_PORT"
-		"-u$REMOTE_USER"
-		"-p$REMOTE_PASS"
 	)
 else
 	cmd+=(
 		"-h$REMOTE_HOST"
 		"-P$REMOTE_PORT"
-		"-u$REMOTE_USER"
-		"-p$REMOTE_PASS"
 	)
 fi
 
-cmd+=("${MARIADB_OPTS[@]}" "$@" -- "$REMOTE_DB")
+cmd+=(
+	"-u$REMOTE_USER"
+	"-p$REMOTE_PASS"
+	"${MARIADB_OPTS[@]}"
+	"$@"
+	--
+	"$REMOTE_DB"
+)
 
 #
 # run ssh & mariadb

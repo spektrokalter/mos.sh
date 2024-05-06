@@ -45,19 +45,19 @@ if [[ -v SSH_HOST ]]; then
 	cmd+=(
 		-hlocalhost
 		"-P$LOCAL_PORT"
-		"-u$REMOTE_USER"
-		"-p$REMOTE_PASS"
 	)
 else
 	cmd+=(
 		"-h$REMOTE_HOST"
 		"-P$REMOTE_PORT"
-		"-u$REMOTE_USER"
-		"-p$REMOTE_PASS"
 	)
 fi
 
-cmd+=("${MARIADB_DUMP_OPTS[@]}")
+cmd+=(
+	"-u$REMOTE_USER"
+	"-p$REMOTE_PASS"
+	"${MARIADB_DUMP_OPTS[@]}"
+)
 
 tables=()
 
