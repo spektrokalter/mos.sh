@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec find ~/.ros.sh.d -type f -printf '%P\n'
