@@ -37,12 +37,12 @@ Argument passing
 	mos uses REMOTE_DB as db_name.
 
 	mariadb-dump(1) is different. It also takes table names *after*
-	db_name. In light of this, should I support accessing tables with
-	mos-dump, and if so, what is the best way to integrate mos-dump
+	db_name. Considering this, should mos-dump support accessing
+	tables with, and if so, what is the best way to integrate mos-dump
 	and mariadb-dump(1)?
 
 	Accessing tables is an essential function of
-	mariadb-dump(1). Thus, without tables, mos-dump would lack it.
+	mariadb-dump(1). Without tables, mos-dump wouldn't be as useful.
 
 	Supporting db_name automatization and table names in CLI arguments
 	is possible but messy. One can distinguish table names from
