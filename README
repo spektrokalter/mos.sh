@@ -10,22 +10,23 @@ SSH Initialization
 
 Shared connections
 
-	If multiple databases run on the same SQL server, the same
-	connection could be shared, i.e. the same LOCAL_PORT.
+	. If multiple databases run on the same SQL server, the same
+	  connection could be shared, i.e. the same LOCAL_PORT.
 
-	If multiple ssh -L services run with the same LOCAL_PORT, one
-	is broken, and mariadb connects to the other.
+	. If multiple ssh -L services run with the same LOCAL_PORT, one
+	  is broken, and mariadb connects to the other.
 
-	To avoid redundant services, service suffix could be used.
+	. To avoid redundant services, service suffix could be used.
 
-	The same host can be resolved differently on different servers,
-	thus SSH_HOST must be included in the suffix.
+	. The same host can be resolved differently on different servers,
+	  thus SSH_HOST must be included in the suffix.
 
-	Restarting a shared service is not viable as it can break an
-	already established connection.
+	. Restarting a shared service is not viable as it can break an
+	  already established connection.
 
-	Due to all the quirks and the fact that LOCAL_PORT is not derived
-	automatically anyway, this feature will not be implemented.
+	. Due to all the quirks and the fact that LOCAL_PORT is not
+	  derived automatically anyway, this feature will not be
+	  implemented.
 
 Argument passing
 
